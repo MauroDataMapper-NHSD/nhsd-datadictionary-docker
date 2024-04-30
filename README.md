@@ -218,7 +218,7 @@ of the previous releases environment variables setting in docker-compose.yml.
 
 The preference order for loaded sources of properties is
 
-1. Environment Variables
+1. Environment Variables (can be set in the `.env` file)
 2. runtime.yml
 3. build.yml
 4. application.yml
