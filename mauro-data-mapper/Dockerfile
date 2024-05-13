@@ -11,11 +11,6 @@ ARG ADDITIONAL_PLUGINS=""
 ARG MDM_UI_THEME_NAME="nhs-digital"
 ARG MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES="true"
 
-ARG DEPLOY_MDM_EXPLORER=0
-ARG MDM_EXPLORER_VERSION="1.0.0-SNAPSHOT"
-ARG MDM_EXPLORER_BUILD_HOME=/opt/mdm-explorer/dist
-ARG MDM_EXPLORER_API_ENDPOINT="http://localhost:${MDM_PORT}/api"
-
 ARG DEPLOY_NHSD_DD_ORCHESTRATION=0
 ARG NHSD_DD_ORCHESTRATION_VERSION="1.0.0-SNAPSHOT"
 ARG NHSD_DD_ORCHESTRATION_BUILD_HOME=/opt/nhsd-datadictionary-orchestration/dist
@@ -32,7 +27,6 @@ ARG CACHE_BURST=1
 # Checkout the desired versions
 RUN cd "$MDM_APPLICATION_HOME" && git fetch && git checkout "$MDM_APPLICATION_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
 RUN cd "$MDM_UI_HOME" && git fetch && git checkout "$MDM_UI_COMMIT" && if [[ `git status` != HEAD\ detached* ]]; then git pull; fi
-RUN mkdir -p $MDM_EXPLORER_BUILD_HOME
 RUN mkdir -p $NHSD_DD_ORCHESTRATION_BUILD_HOME
 
 # Copy in the building scripts
@@ -50,7 +44,6 @@ COPY mdm-ui $MDM_UI_HOME/
 # Build the front and back ends
 # The front end build will try to use precompiled sources or it will build locally from the given commit/tagU
 RUN build_frontend.sh
-RUN build_explorer.sh
 RUN build_orchestrator.sh
 
 # The only way to include plugins is to build the API manually, however this actually takes very little time as we already have all the
@@ -69,11 +62,16 @@ FROM maurodatamapper/tomcat:$TOMCAT_IMAGE_VERSION
 LABEL org.opencontainers.image.authors="Oliver Freeman <oliver.freeman@bdi.ox.ac.uk>, Joe Crawford <joseph.crawford@bdi.ox.ac.uk>"
 
 ARG MDM_BUILD_HOME=/opt/mdm
-ARG MDM_EXPLORER_BUILD_HOME=/opt/mdm-explorer/dist
 ARG NHSD_DD_ORCHESTRATION_BUILD_HOME=/opt/nhsd-datadictionary-orchestration/dist
 
 ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops"
 
 COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
-COPY --from=mdm-build ${MDM_EXPLORER_BUILD_HOME} ${CATALINA_HOME}/webapps/explorer
-COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/orchestration
+
+# The base image seems to have some explorer cruft left in the ROOT webapp so clobber
+# all of that before copying in the orchestration UI.
+RUN cd ${CATALINA_HOME}/webapps/ROOT \
+	&& rm -f *.txt *.woff *.woff2 *.eot *.ttf *.svg *.js *.html *.css \
+	&& rm -rf assets
+
+COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
