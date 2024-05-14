@@ -67,11 +67,4 @@ ARG NHSD_DD_ORCHESTRATION_BUILD_HOME=/opt/nhsd-datadictionary-orchestration/dist
 ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops"
 
 COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
-
-# The base image seems to have some explorer cruft left in the ROOT webapp so clobber
-# all of that before copying in the orchestration UI.
-RUN cd ${CATALINA_HOME}/webapps/ROOT \
-	&& rm -f *.txt *.woff *.woff2 *.eot *.ttf *.svg *.js *.html *.css \
-	&& rm -rf assets
-
-COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
+COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT/orchestration
