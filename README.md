@@ -59,6 +59,12 @@ This starts the two container images as containers as follows:
 
 **Note:** After starting the `mauro-data-mapper` container, there is an initial load time that happens before it can receive web traffic. View the logs in the container to know when it is ready - usually when a log message `org.apache.catalina.startup.Catalina.start Server startup in [x] milliseconds` appears.
 
+**Note:** There is also a more convenient way to perform both (re)build images and start containers in command if you prefer:
+
+```bash
+docker compose up -d --build
+```
+
 Once running, in a browser navigate to:
 
 - http://localhost - Access the main Mauro Data Mapper application
@@ -112,6 +118,8 @@ Continually building docker images will leave a lot of loose snapshot images flo
 * Clean up stopped containers - `docker rm $(docker ps -a -q)`
 * Clean up dangling images - `docker rmi $(docker images -q --filter "dangling=true")`
 * Clean up dangling volumes - `docker volume rm $(docker volume ls -qf dangling=true)`
+
+There is also a `docker system prune` command that will remove all unused containers, networks, images (dangling and unused) and volumes. Refer to the documentation for more details: https://docs.docker.com/reference/cli/docker/system/prune/
 
 # Docker Compose
 
