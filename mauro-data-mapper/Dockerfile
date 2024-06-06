@@ -67,4 +67,4 @@ ARG NHSD_DD_ORCHESTRATION_BUILD_HOME=/opt/nhsd-datadictionary-orchestration/dist
 ENV CATALINA_OPTS="-Xmx8g -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops"
 
 COPY --from=mdm-build ${MDM_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT
-COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/ROOT/orchestration
+COPY --from=mdm-build ${NHSD_DD_ORCHESTRATION_BUILD_HOME} ${CATALINA_HOME}/webapps/orchestration
