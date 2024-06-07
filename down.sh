@@ -2,4 +2,9 @@
 
 set -euo pipefail
 
+export MDM_PORT=8080
+export MDM_APPLICATION_COMMIT=develop
+export MDM_UI_COMMIT=develop
+export MAURO_API_ENDPOINT=https://ec2-13-42-94-180.eu-west-2.compute.amazonaws.com/api
+
 docker compose down
