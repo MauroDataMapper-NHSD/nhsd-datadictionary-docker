@@ -19,8 +19,11 @@ echo "  MDM_APPLICATION_COMMIT: $MDM_APPLICATION_COMMIT"
 echo "  MDM_UI_COMMIT:          $MDM_UI_COMMIT"
 echo "  MAURO_API_ENDPOINT:     $MAURO_API_ENDPOINT"
 
-echo Starting container:
-# docker compose up -d
-docker compose up -d --no-deps --build
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR"
 
-# docker compose logs -f
+echo Building container:
+docker compose build --no-cache
+
+echo Starting container:
+docker compose up -d
