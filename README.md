@@ -208,16 +208,13 @@ The following variables need to be overriden/set when starting up a new `mauro-d
 
 # Deployment
 
-This section describes deploying Mauro to a server that has already been prepared
-with the necessary software.
+This section describes deploying Mauro to a server that has already been prepared with the necessary software.
 
-The following is specifically for deployment to a TEST server and does not
-require cloning the repository—we're doing this to support multiple admins
-without needing to provide GitHub access.
+The following is specifically for deployment to a TEST server and does not require cloning the repository—we're doing this to support multiple admins without needing to provide GitHub access.
 
-1.  Copy the `./scripts/update-from-github.sh` script onto the server and
-    place it in a directory where you want to build the Docker container, in 
-    this example the directory being used will be `/home/build`
+The first two steps below should only need to be done once per server after which only step 3 will normally be required:
+
+1.  Copy the `./scripts/update-from-github.sh` script onto the server and place it in a directory where you want to build the Docker container, in this example the directory being used will be `/home/build`
 2.  Edit `update-from-github.sh` to make sure the correct branch is used:
     -   `BRANCH_TAG` - identifies the branch containing the sources, for the latest code for the TEST server (TEST branch) this will generate the url: "https://github.com/MauroDataMapper-NHSD/nhsd-datadictionary-docker/tarball/TEST"
     -   `GROUP_NAME` — the name of the user group that shares access to the build directory.
@@ -234,15 +231,11 @@ without needing to provide GitHub access.
         ./update-from-github.sh
     ```
 
-    This will stop any currently running instances of Mauro, rename the working
-    directory, download a tarball containing the update and extract it into a
-    fresh directory, finally it will attempt to start the container using the
-    `up.sh` command in the new sources.
+    This will stop any currently running instances of Mauro, rename the working directory, download a tarball containing the update and extract it into a fresh directory, finally it will attempt to start the container using the `up.sh` command in the new sources.
 
 ## Free space
 
-There is a lot of space being used by docker in `/ver/lib/docker` — this can
-be release with:
+There is a lot of space being used by docker in `/ver/lib/docker` — this can be release with:
 
 ```bash
     docker system prune

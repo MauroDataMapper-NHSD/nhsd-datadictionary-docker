@@ -20,7 +20,7 @@ services:
             args:
                 MDM_APPLICATION_COMMIT: "${MDM_APPLICATION_COMMIT}"
                 MDM_UI_COMMIT: "${MDM_UI_COMMIT}"
-                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-nhs-data-dictionary:2.0.0-SNAPSHOT"
+                ADDITIONAL_PLUGINS: "uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-nhs-data-dictionary:2.0.0-SNAPSHOT;uk.ac.ox.softeng.maurodatamapper.plugins:mdm-plugin-authentication-openid-connect:2.2.0"
                 MDM_UI_THEME_NAME: "nhs-digital"
                 CACHE_BURST: "${CACHE_BURST}"
                 NHSD_DD_ORCHESTRATION_API_ENDPOINT: "${MAURO_API_ENDPOINT}"
