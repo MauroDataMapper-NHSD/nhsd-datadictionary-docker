@@ -5,14 +5,23 @@ set -euo pipefail
 BRANCH_TAG=TEST
 GROUP_NAME=id
 REPOSITORY=https://github.com/MauroDataMapper-NHSD/nhsd-datadictionary-docker
-
 DOCKER_DIR=nhsd-datadictionary-docker
 TARBALL=temp.tar.bz
+
+EMAIL_USERNAME=datamodel.dictionaryservice1@nhs.net
+EMAIL_HOST=send.nhs.net
+EMAIL_PORT_NUMBER=587
+EMAIL_PASSWORD=
 
 DATESTR=$(date '+%Y%m%d%H%M')
 ARCHIVED_DIR="${DOCKER_DIR}_archived_${DATESTR}"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+if [ -z "$EMAIL_PASSWORD" ]; then
+  echo "Please edit this script and provide a value for EMAIL_PASSWORD" >&2
+  exit 1
+fi
 
 trap "rm -f $TARBALL" EXIT
 
@@ -46,6 +55,13 @@ fi
 
 echo "Making the up & down scripts executable"
 chmod ug+x "$DOCKER_DIR/up.sh" "$DOCKER_DIR/down.sh"
+
+# Update the email password in the build.yml configuration
+sed -i -e "s/\(username:\) ''/\1 $EMAIL_USERNAME/" \
+  -e "s/\(password:\) ''/\1 $EMAIL_PASSWORD/" \
+  -e "s/\(host:\) ''/\1 $EMAIL_HOST/" \
+  -e "s/\(port:\) ''/\1 $EMAIL_PORT_NUMBER/" \
+  $DOCKER_DIR/mauro-data-mapper/config/build.yml
 
 echo "Building and starting the containers"
 "$DOCKER_DIR/up.sh"
