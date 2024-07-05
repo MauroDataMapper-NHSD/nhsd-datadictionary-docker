@@ -10,7 +10,8 @@ fi
 export MDM_PORT=8080
 export MDM_APPLICATION_COMMIT=develop
 export MDM_UI_COMMIT=develop
-export MAURO_API_ENDPOINT=https://ec2-13-42-94-180.eu-west-2.compute.amazonaws.com/api
+# export MAURO_API_ENDPOINT=https://ec2-13-42-94-180.eu-west-2.compute.amazonaws.com/api
+export MAURO_API_ENDPOINT=https://mauro.dev.dataproducts.nhs.uk/api
 export CACHE_BURST=1
 
 echo Setting the following environment variables:
