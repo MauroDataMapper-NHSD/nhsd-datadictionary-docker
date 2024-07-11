@@ -171,6 +171,7 @@ You can create multiple `.env` files and name them appropriately e.g. `.env.live
     # Build the images on the live environment
     docker compose --env-file .env.live build
 ```
+The build also requires the `NHSD_DD_MAURO_BASEURL` environment variable to be defined as this is used to patch the orchestration UI with the base address of the Mauro UI.  This may be the same as the value for MAURO_ENDPOINT and will take the form of the host part of Mauro URLs (e.g. `https://mauro.dataproducts.nhs.uk` - no trailing slash).
 
 ## Build and Runtime Configuration
 

@@ -24,6 +24,7 @@ services:
                 MDM_UI_THEME_NAME: "nhs-digital"
                 CACHE_BURST: "${CACHE_BURST}"
                 NHSD_DD_ORCHESTRATION_API_ENDPOINT: "${MAURO_API_ENDPOINT}"
+                NHSD_DD_MAURO_BASEURL: "${MAURO_ENDPOINT}"
         environment:
             PGPASSWORD: postgresisawesome
             runtime.config.path: /usr/local/tomcat/conf/runtime.yml
