@@ -161,22 +161,30 @@ the work for you:
   3. Configure Docker's data root away from the default `/var/lib/docker`
      if necessary by adding or editing `/etc/docker/daemon.json` see
      https://docs.docker.com/config/daemon/#daemon-data-directory
+     You may want to make the directory accessible to the `id` group.
   4  Configure Nginx as a reverse-proxy (hack the
      `/etc/nginx/sites-available/default` file see:
      https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
+     and the example site config at the end of this script.
   5. The Nginx will also require SSL certificates; the current configuration
      of the server seems to come with the Let's Encrypt certificates already 
      in place.
-  5. Copy the `update-from-github.sh` to the `/home/build` directory (make it
+  6. Copy the `update-from-github.sh` to the `/home/build` directory (make it
      executable).
-  6. Set the `BRANCH_TAG` value in the script to identify the
+  7. Set the `BRANCH_TAG` value in the script to identify the
      `nhsd-datadictionary-docker` branch to use on this server—make sure the
      branch has been pushed).
-  7. Run the `update-from-github.sh` script.
+  8. If you are deploying to a new server (with a new hostname) check the 
+     `up.sh` (`down.sh`?) and `.env` files to ensure that they are exporting
+     the correct value for `MAURO_ENDPOINT`.
+  9. Run the `update-from-github.sh` script.  With all the above in place
+     the site should be available via the hostname
 
 EOF
 
-## An example of the default site configuration for the TRAINING site:
+## Example of the site configuration currently working as the default on 
+## the TRAINING site:
+
 # server {
 #     if ($host = mauro.uat.dataproducts.nhs.uk) {
 #         return 301 https://$host$request_uri;
