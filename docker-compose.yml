@@ -40,10 +40,13 @@ services:
             - ./shared_volumes/tmp:/tmp
             - ./mauro-data-mapper/config/runtime.yml:/usr/local/tomcat/conf/runtime.yml
         restart: on-failure
+
 # Persistence capability to systems,
-# Any volumes labelled below will ensure persistence when containers removed unless the volume is removed as well
+# Any volumes labelled below will ensure persistence when containers removed
+# unless the storage for the volume on the host is removed as well
 volumes:
     postgres12:
         driver: local
     lucene_index:
         driver: local
+
