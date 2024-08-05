@@ -1,0 +1,29 @@
+digraph MauroDataDictionary {
+    graph [fontname = "Verdana"];
+    node [fontname = "Verdana"];
+    edge [fontname = "Verdana"];
+
+    subgraph cluster_ubuntu {
+        label="Ubuntu";
+        style=rounded
+            rankdir=LR;
+
+        nginx [label="Nginx reverse\nproxy" shape=box];
+
+        subgraph cluster_web {
+            label="Mauro data mapper\ncontainer";
+            frontend [label="Frontend UI" shape=box];
+            backend [label="Backend API" shape=box];
+        }
+        subgraph cluster_db {
+            label="Database\ncontainer";
+            postgres [label="PostgreSQL" shape=box];
+        }
+        storage [label="Data storage\nvolume" shape=cylinder];
+    }
+    nginx -> frontend [label="Forwards Requests"];
+    nginx -> backend;
+    nginx -> postgres;
+    backend -> postgres [label="Data Requests"];
+    postgres -> storage;
+}

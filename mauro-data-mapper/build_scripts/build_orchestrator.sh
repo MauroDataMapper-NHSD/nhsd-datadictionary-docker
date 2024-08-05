@@ -20,7 +20,10 @@ precompiledBuild(){
   mkdir "$NHSD_DD_ORCHESTRATION_BUILD_HOME"
   cp -r "nhsd-datadictionary-orchestration-${NHSD_DD_ORCHESTRATION_VERSION}"/* "$NHSD_DD_ORCHESTRATION_BUILD_HOME"
 
-  find "$NHSD_DD_ORCHESTRATION_BUILD_HOME" -name main.*.js -exec sed -e "s|apiEndpoint:\"/nhsd-datadictionary/api\"|apiEndpoint:\"${NHSD_DD_ORCHESTRATION_API_ENDPOINT}\"|g" -i {} \;                                                                 
+  find "$NHSD_DD_ORCHESTRATION_BUILD_HOME" -name main.*.js -exec sed \
+  	-e "s|apiEndpoint:\"/nhsd-datadictionary/api\"|apiEndpoint:\"${NHSD_DD_ORCHESTRATION_API_ENDPOINT}\"|g" \
+  	-e "s|mauroBaseUrl:\"https://modelcatalogue.cs.ox.ac.uk/nhsd-datadictionary/\"|mauroBaseUrl:\"$NHSD_DD_MAURO_BASEURL\"|g" \
+  	-i {} \;                                                                 
 }
 
 precompiledBuild
