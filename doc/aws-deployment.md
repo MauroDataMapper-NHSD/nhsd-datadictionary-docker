@@ -1,9 +1,3 @@
-% Mauro deployment
-%
-%
-
-\pagebreak
-
 # Overview
 
 This document covers the deployment of the Mauro Data Dictionary in Docker
@@ -18,10 +12,11 @@ and partly manual—this task only needs to be done once per machine.
 # Environment
 
 The environment into which the Mauro data dictionary is deployed is an Ubuntu
-24.04 LTS system with 32Gb memory and 4 cores.  The system has a minimal setup
-allowing us to install the components required to run and maintain the Mauro
-docker container.  One notable feature observed on the TRAINING server is that
-the "Let's Encrypt" certificates appeared to be present.
+24.04 LTS system with 32Gb memory and 4 cores that has been prepared by NHS
+Data Solutions. The system has a minimal setup allowing us to install the
+components required to run and maintain the Mauro docker container.  One
+notable feature observed on the TRAINING server is that the "Let's Encrypt"
+certificates appeared to be present.
 
 ## TEST server
 
@@ -117,6 +112,17 @@ Two containers are used to deploy Mauro: one contains the DBMS the other the
 Mauro front and back ends.  The building is carried out using the
 `./scripts/update-from-github.sh` script.
 
+What gets built into the Mauro container is as follows:
+
+*   The backend server which supports the `https://mauro.x.y.z/api` requests
+    and is implemented as a web server running on the JVM.
+*   The [NodeJS][4] based Mauro front end 
+*   The [NodeJS][4] base orchestration user interface
+
+Note that the two UI parts are obtained as snapshots from the Jenkins
+`https://jenkins.cs.ox.ac.uk/artifactory` which will be turned off soon 
+requiring the scripts to be updated.
+
 Given the current requirement for three slightly different deployments we are
 using long-lived git branches which maintain the different configurations these
 need.  So when creating a new deployment we suggest creating a new branch (based
@@ -142,7 +148,6 @@ off of `develop`) and updating the files which require different values—see st
 
 6.  Ingest a suitable branch and when that has completed create a new version
 
-\pagebreak
 # Configuring Mauro
 
 With the site running there are a number of tasks to carry out before it can
@@ -188,8 +193,8 @@ The OpenID Connect feature needs to be switched on in Mauro.
 1.  Sign in as the administrator
 2.  Click on the user menu (top-right corner) and select "Manage groups"
 3.  Click the "Add" button.
-4.  Create a new group called "readers", then click "Add group"
-5.  Repeat for a new group called "editors".
+4.  Create a new group called "Readers", then click "Add group"
+5.  Repeat for a new group called "Editors".
 
 ## User accounts
 
@@ -217,15 +222,20 @@ possible to workaround this though:
 
 The following user accounts should be created:
 
-Name                Email                       Environments            Groups
-------------------- --------------------------- ----------------------- ---------------
-Peter Monks         peter.monks@systemc.com     TEST, TRAINING, LIVE    Administrators
-Mike Hewlett        mike.hewlett@systemc.com    TEST, TRAINING, LIVE    Administrators
-Oliver Butler       oliver.butler@systemc.com   TEST, TRAINING, LIVE    Administrators
-Angela Faulding     angela.faulding@nhs.net     TEST, TRAINING, LIVE    Administrators
-Cath Chilcott       cath.chilcott@nhs.net       TEST                    Editors
-Kate Palmer-Lilley  kate.palmer-lilley@nhs.net  TEST, TRAINING, LIVE    Administrators
-Steve Bowring       steve.bowring@nhs.net       TEST                    Readers
+| Name                | Email                       | Environments            | Groups          | 
+| ------------------- | --------------------------- | ----------------------- | --------------- |
+| Peter Monks         | peter.monks@systemc.com     | TEST, TRAINING, LIVE    | Administrators  |
+| Mike Hewlett        | mike.hewlett@systemc.com    | TEST, TRAINING, LIVE    | Administrators  |
+| Oliver Butler       | oliver.butler@systemc.com   | TEST, TRAINING, LIVE    | Administrators  |
+| Angela Faulding     | angela.faulding@nhs.net     | TEST, TRAINING, LIVE    | Administrators  |
+| Cath Chilcott       | cath.chilcott@nhs.net       | TEST                    | Editors         |
+| Kate Palmer-Lilley  | kate.palmer-lilley@nhs.net  | TEST, TRAINING, LIVE    | Administrators  |
+| Steve Bowring       | steve.bowring@nhs.net       | TEST                    | Readers         |
+
+Which, along with other users that have been added to the system will look
+something like this:
+
+![](./manage-users.png){ height=340px }
 
 ## Folders and Permissions
 
@@ -335,7 +345,28 @@ Form-data:
 
 Same as above, watch and wait for the ingest to complete.
 
-\pagebreak
+# Updating Mauro
+
+## Deploying an update
+
+When Mauro has been updated and the changes pushed to the
+`nhsd-datadictionary-docker` repository the Docker containers can be rebuilt
+by entering the `/home/build` directory and running the `update-from-github.sh`
+script as described in "Build the Docker containers" above (sections 1-4 only).
+
+The `update-from-github.sh` script saves the previous incarnation of the build
+in a directory named `nhs-datadictionary-docker_archivedYYYYmmddHHMM` where
+the "YYYYmmddHHM" part is the date and time the update was made.
+
+**Note**: if the `update-from-github.sh` script has been updated it must first
+be copied to the `/home/build` directory and ideally have been tested first.
+
+## Stopping and starting Mauro
+
+If all you need to do is to temporarily stop Mauro you can use the `down.sh` 
+script in the `/home/build/nhsd-datadictionary-docker` directory; to restart
+Mauro run the `up.sh` script in the same directory.
+
 # Appendix
 
 ## 1. Example Ningx default site script
@@ -378,9 +409,23 @@ The following example has been taken from the TRAINING site:
 *Note: in some of the deployed sites the configurations include
 "managed by Certbot" comments which probably should be left in place*
 
+## 2. SMTP
+
+At the time of writing SMTP could not be configured because such a server had not
+been successfully provided by NHSE but should that happen the following might
+(we've not been able to test it) work:
+
+1.  Open `mauro-data-mapper/config/build.yml`
+2.  Locate the `simplejavamail` section and update the values for username, 
+    `password` etc.
+3.  Rebuild the Docker components then watch the log file for a line after the
+    line: "`Configuring emailers`" — which currently reads: "` Cannot enable email plugin`"
+
+
+
 ---
 
 [1]: https://docs.docker.com/config/daemon/#daemon-data-directory (Docker data directory)
 [2]: https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/ (NGINX Reverse Proxy)
 [3]: https://documenter.getpostman.com/view/9840589/UVC8BkkA (Mauro Data Mapper)
-
+[4]: https://nodejs.org/ (NodeJS)
