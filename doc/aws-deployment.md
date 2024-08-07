@@ -37,7 +37,9 @@ TEST server.
 
 ## LIVE server
 
-Details about the live server are currently unknown.
+The address of the LIVE server is 18.134.119.194 with an external host name
+of `mauro.dataproducts.nhs.uk` and has the same port configuration as the
+TEST and TRAINING servers.
 
 # Architecture
 
