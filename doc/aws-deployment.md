@@ -25,9 +25,10 @@ The address of the TEST server is 13.42.94.180 with an external host name of
 
 The available ports are:
 
-*   22 — SSH (IP restricted)
-*   443 — the “https” connection
-*   5432 — Postgres database (IP restricted)
+*   22 - SSH (IP restricted)
+*   80 - the "http" connection
+*   443 - the "https" connection
+*   5432 - Postgres database (IP restricted)
 
 ## TRAINING server
 
@@ -54,12 +55,27 @@ deployment.
 
 # Preparing the servers
 
+Upon logging into the server check to see if there are any notifications about
+the current kernel and if it needs to be updated—this usually entails no more
+than a reboot.
+
 ## Scripted part
 
 The script `./scripts/prepare_mauro_server.sh` automates some of the
 preparation work and the heading should be read before running it.  The script
 can be re-run and sections skipped as required, you may, of course, prefer to
-carry out these steps or similar manually.
+carry out these steps or similar manually otherwise upload the script to your
+home directory and make it runnable.  To upload the script use `scp`—the
+following is an example to upload to the live server:
+
+```
+    scp prepare_mauro_server.sh [your username]@18.134.119.194:
+```
+Once uploaded log into the server and make the script executable:
+
+```
+    chmod u+x prepare_mauro_server.sh
+```
 
 A summary of the preparation is as follows:
 
@@ -67,7 +83,7 @@ A summary of the preparation is as follows:
     necessary group memberships to share the admin work.  The script contains a
     list of users to update and will first check these users exist.
 
-2.  The system has a regular update which may result in the need for a restart.
+2.  The script runs a regular update which may result in the need for a restart.
 
 3.  To install Docker it is necessary to add the Docker repository to the
     system—this step only needs to be run once.
