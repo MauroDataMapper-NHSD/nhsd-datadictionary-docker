@@ -10,7 +10,7 @@ precompiledBuild(){
     NHSD_DD_ORCHESTRATION_LIBRARY='artifacts'
   fi
 
-  NHSD_DD_ORCHESTRATION_URL="https://jenkins.cs.ox.ac.uk/artifactory/${NHSD_DD_ORCHESTRATION_LIBRARY}/mauroDataMapper/nhsd-datadictionary-orchestration/nhsd-datadictionary-orchestration-${NHSD_DD_ORCHESTRATION_VERSION}.tgz"
+  NHSD_DD_ORCHESTRATION_URL="https://mauro-repository.com/${NHSD_DD_ORCHESTRATION_LIBRARY}/mauroDataMapper/nhsd-datadictionary-orchestration/nhsd-datadictionary-orchestration-${NHSD_DD_ORCHESTRATION_VERSION}.tgz"
 
   echo "Downloading precompiled sources ${NHSD_DD_ORCHESTRATION_URL}"
 

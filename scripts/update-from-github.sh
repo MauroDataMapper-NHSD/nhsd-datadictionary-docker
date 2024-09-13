@@ -3,7 +3,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-BRANCH_TAG=
+BRANCH_TAG=develop
 GROUP_NAME=id
 REPOSITORY=https://github.com/MauroDataMapper-NHSD/nhsd-datadictionary-docker
 DOCKER_DIR=nhsd-datadictionary-docker

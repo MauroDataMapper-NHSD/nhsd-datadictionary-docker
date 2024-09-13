@@ -10,7 +10,7 @@ fi
 export MDM_PORT=8080
 export MDM_APPLICATION_COMMIT=develop
 export MDM_UI_COMMIT=develop
-export MAURO_ENDPOINT=https://mauro.uat.dataproducts.nhs.uk
+export MAURO_ENDPOINT=http://localhost:8080
 export MAURO_API_ENDPOINT=$MAURO_ENDPOINT/api
 export NHSD_DD_MAURO_BASEURL=$MAURO_ENDPOINT/api
 export CACHE_BURST=1
